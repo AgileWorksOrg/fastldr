@@ -4,3 +4,12 @@
 *.jar
 *.war
 *.ear
+.idea
+fastloader-parent.iml
+*.iml
+fastloader-parser/target
+fastloader/target
+fastloader-args-parser/target
+fastldr-args-parser/target
+fastldr-parser/target
+fastldr/target

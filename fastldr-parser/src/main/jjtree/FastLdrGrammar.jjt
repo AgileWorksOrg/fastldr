@@ -1,0 +1,223 @@
+/**
+ * JJTree template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  JDK_VERSION = "1.5";
+  static = false;
+}
+
+PARSER_BEGIN(FastLdr)
+package org.agileworks.fastldr.parser;
+
+import java.io.File;
+import java.lang.Boolean;
+import java.lang.System;
+import org.agileworks.fastldr.domain.Control;
+import org.agileworks.fastldr.domain.Options;
+import org.agileworks.fastldr.domain.Field;
+
+
+public class FastLdr
+{
+
+	private String content;
+  
+  public static void main(String args [])
+  {
+    FastLdr parser = new FastLdr(System.in);
+    try
+    {
+      Control c = parser.Start();
+      System.out.println(c);
+    }
+    catch (Exception e)
+    {
+      System.out.println("Oops.");
+      System.out.println(e.getMessage());
+    }
+  }
+}
+
+PARSER_END(FastLdr)
+
+SKIP: {
+        " "
+    |   "\t"
+    |   "\n"
+    |   "\r"
+    |   "\f"
+    |   "TRAILING"
+    | 	"NULLCOLS"
+  	|	"FIELDS"
+  	| 	"TERMINATED"
+  	| 	"BY"
+  	| 	"','"
+  	| 	"OPTIONALLY"
+  	| 	"ENCLOSED"
+  	| 	"'\"'"
+}
+
+TOKEN: {
+        <K_TRUE: "TRUE">
+    |   <K_FALSE: "FALSE">
+}
+
+TOKEN: {
+        <#DIGIT: ["0" - "9"] >
+    |   <#NONZERO_DIGIT: ["1" - "9"] >
+    |   <#EXP: ["e", "E"] ( <O_PLUS > | <O_MINUS > )? >
+    |   <O_PLUS: "+">
+    |   <O_MINUS: "-">
+    |   <O_DOT: ".">
+}
+
+TOKEN: {
+  
+        <NUMBER:  <INTEGER> | <INTEGER> <FRACTIONAL_DIGITS> | <INTEGER> <EXPONENT> | <INTEGER> <FRACTIONAL_DIGITS> <EXPONENT> >
+    |   <INTEGER: (<O_MINUS>)? ( <DIGIT> | <NONZERO_DIGIT> <DIGITS>) >
+    |   <FRACTIONAL_DIGITS: <O_DOT> <DIGITS > >
+    |   <EXPONENT: <EXP> <DIGITS> >
+    |   <DIGITS: ( <DIGIT> )+ >
+}
+
+
+TOKEN :
+{
+  	< O_OPENBRACE: "(" >
+  | < O_CLOSEBRACE: ")" >
+  | < O_OPTIONS: "OPTIONS" >
+  | < O_DIRECT: "DIRECT" >
+  | < O_COLUMNARRAYROWS: "COLUMNARRAYROWS" >
+  | < O_SKIP: "SKIP" >
+  | < O_LOAD: "LOAD" >
+  | < O_DATA: "DATA" >
+  | < O_CHARACTERSET: "CHARACTERSET" >
+  | < O_INFILE: "INFILE" >
+  | < O_INTO: "INTO" >
+  | < O_TABLE: "TABLE" >
+  | < O_TRUNCATE: "TRUNCATE" >
+  | < O_EQ: "=" >
+  | < O_COMMA: "," >
+  | < O_QUOTES: "'" >
+}
+
+//Field types
+TOKEN :
+{
+  	< O_CHAR: "CHAR" >
+	|	< O_DATE: "DATE" > 
+}
+
+TOKEN: {
+        <STRING: ( <ALLOWABLE_CHARACTERS> )+ >
+    |   <ALLOWABLE_CHARACTERS:["0"-"9","a"-"z", "A"-"Z", ":", "/", "\\", ".", "-", "_"] >
+}
+
+Control Start() :
+{
+	Control c = new Control();
+	Options o = new Options();
+	c.setOptions(o);
+	Token t = null;
+}
+{
+
+	(
+		< O_OPTIONS > <O_OPENBRACE> ( parseOptions(c,o) ( < O_COMMA > parseOptions(c,o) )* )? <O_CLOSEBRACE>
+		< O_LOAD > < O_DATA >
+		< O_CHARACTERSET > t=< STRING > { c.setCharset(t.image); }
+		< O_INFILE > < O_QUOTES > t=< STRING > { c.setFile(new File(t.image)); } < O_QUOTES >
+		< O_INTO > <O_TABLE > t= < STRING > { c.setTable(t.image); } < O_TRUNCATE > { c.setTruncate(Boolean.TRUE); }
+		//< O_FIELDS > < O_TERMINATED > < O_BY > < O_QUOTES > t=< ALL_CHARS > { c.setFieldsTerminatedBy(t.image); } < O_QUOTES >
+		//< O_OPTIONALLY > < O_ENCLOSED > < O_BY > < O_QUOTES > t=< STRING > { c.setFieldsEnclosedBy(t.image); } < O_QUOTES >
+		<O_OPENBRACE>( parseFields(c) )? <O_CLOSEBRACE>
+	)
+  {
+    return c;
+  }
+}
+
+void parseOptions(Control c, Options o) #void:
+{
+	Token t = null;
+}
+{
+	  < O_DIRECT > < O_EQ > (parseDirect(c,o))
+		| < O_COLUMNARRAYROWS > < O_EQ > (parseColumnArrayRows(c,o))
+		| < O_SKIP > < O_EQ > (parseSkip(c,o)) 
+		| < O_LOAD > < O_EQ > (parseLoad(c,o)) 
+}
+
+void parseDirect(Control c, Options o) #void:
+{
+  Token t = null;
+}
+{
+  t=<K_FALSE> { o.setDirect(Boolean.FALSE); }
+  | t=<K_TRUE > { o.setDirect(Boolean.TRUE); }
+}
+
+void parseColumnArrayRows(Control c, Options o) #void:
+{
+  Token t = null;
+}
+{
+  t=< NUMBER >
+  {
+    o.setRows(Integer.valueOf(t.image));
+  }
+}
+
+void parseSkip(Control c, Options o) #void:
+{
+  Token t = null;
+}
+{
+  t=< NUMBER >
+  {
+    o.setSkip(Integer.valueOf(t.image));
+  }
+}
+
+void parseLoad(Control c, Options o) #void:
+{
+  Token t = null;
+}
+{
+  t=< NUMBER >
+  {
+    o.setLoad(Integer.valueOf(t.image));
+  }
+}
+
+void parseFields(Control c) #void:
+{
+}
+{
+  parseField(c) [< O_COMMA > parseFields(c) ]
+}
+
+void parseField(Control c) #void:
+{
+  Token t = null;
+  Field f = new Field();
+}
+{
+//TransactionID CHAR(15),
+// VDate   DATE 'DD-MON-YY',
+//VQuantity,
+
+	t=< STRING > { f.setName(t.image); }
+	[
+  		( < O_CHAR > { f.setType("CHAR"); } | < O_DATE > { f.setType("DATE"); })
+		(
+		  	(<O_OPENBRACE> t=< NUMBER > { f.setProperty(t.image); } <O_CLOSEBRACE>)
+			| ( < O_QUOTES > t=< STRING > { f.setProperty(t.image); } < O_QUOTES > ) 
+		)
+	]
+  {
+    c.addField(f);
+  }
+}
+

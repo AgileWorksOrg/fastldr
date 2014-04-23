@@ -1,0 +1,134 @@
+/**
+ * JJTree template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  JDK_VERSION = "1.5";
+  static = false;
+}
+
+PARSER_BEGIN(CmdArgumentsParser)
+package org.agileworks.fastldr.args.parser;
+
+import org.agileworks.fastldr.args.CmdArguments;
+import org.agileworks.fastldr.args.UserID;
+import org.agileworks.fastldr.args.parser.ParseException;
+//import java.io.StringBufferInputStream;
+
+
+public class CmdArgumentsParser
+{
+  public static void main(String args [])
+  {
+	CmdArgumentsParser parser = new CmdArgumentsParser(System.in);
+    try
+    {
+      CmdArguments a = parser.Start();
+      System.out.println(a);
+    }
+    catch (Exception e)
+    {
+      System.out.println("Oops.");
+      System.out.println(e.getMessage());
+    }
+  }
+}
+
+PARSER_END(CmdArgumentsParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN : /* ARGUMENT OPTIONS */
+{
+  <ARGS: <ARG_PARFILE> | <ARG_CONTROL> | <ARG_LOG> | <ARG_BAD> | <ARG_DISCARD> | <ARG_LOAD> | <ARG_SKIP> > 
+  | <ARG_USERID: "USERID">
+  | <ARG_PARFILE: "PARFILE">
+  | <ARG_CONTROL: "CONTROL">
+  | <ARG_LOG: "LOG">
+  | <ARG_BAD: "BAD">
+  | <ARG_DISCARD: "DISCARD">
+  | <ARG_LOAD: "LOAD">
+  | <ARG_SKIP: "SKIP">
+}
+
+TOKEN :
+{
+  <AT_SIGN: "@">
+  | <SLASH_SIGN: "/">
+  | <EQUAL_SIGN: "=">
+  | <COMMA_SIGN: ",">
+  | <STRING: ( <ALLOWABLE_CHARACTERS> )+ >
+  | <#ALLOWABLE_CHARACTERS:["0"-"9","a"-"z", "A"-"Z", ":", ".", "-", "_", "!", "/", "@"] >
+}
+
+TOKEN : /* Elementary tokens */
+{
+    <INTEGER: ( <DIGIT> )+ >
+  | <#DIGIT: ["0" - "9"] >
+}
+
+CmdArguments Start() :
+{
+ 	CmdArguments a = new CmdArguments();
+ 	Token t = null;
+}
+{
+	(
+		parseArg(a) (<COMMA_SIGN> (parseArg(a)))*
+    )
+	{
+		return a;
+	}
+}
+
+void parseArg(CmdArguments a) #void:
+{
+	Token t = null;
+}
+{
+  try {
+    (
+	    t=<ARGS> <EQUAL_SIGN> (parseValue(t, a))
+	  | t=<ARG_USERID> <EQUAL_SIGN> (parseValue(t, a))
+    )
+  }
+  catch (ParseException e) {
+    Token et = e.currentToken;
+
+	// throw the error up
+	if (et == null)
+		throw e;
+	else if (et.kind == 0)
+		throw new ParseException("Found an invalid parameter: " + et.next);
+	else
+		throw new ParseException("Found an invalid value '" + et.next + "' for '" + t + "' argument");
+  }
+}
+
+void parseValue(Token argName, CmdArguments a) #void:
+{
+	Token argValue = null;
+	UserID uid = null;
+}
+{
+    (
+      argValue=<STRING>
+    )
+    {
+		if (argName.kind == ARG_USERID)	{
+			uid = new UserID(argValue.image);
+			a.setUserID(uid);
+	    }
+	    else
+		    a.setArg(argName.image, argValue.image);
+    }
+    | argValue=<INTEGER> { a.setArg(argName.image, argValue.image); }
+}
+
+    
