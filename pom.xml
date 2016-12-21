@@ -19,13 +19,6 @@
 		<module>fastldr-parser</module>
 	</modules>
 
-    <repositories>
-        <repository>
-            <id>freemind</id>
-            <url>http://repos.dev.freemind.co.jp/maven2</url>
-        </repository>
-    </repositories>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

@@ -3,18 +3,25 @@ FastLdr
 
 Alternative data loader with Oracle sqlldr compatible interface
 
-Required driver must be available on classpath - ojdbc7.jar, h2.jar, or other
+### Compilation:
 
-Run:
-java -cp fastldr.jar:dbdriver.jar org.agileworks.fastldr.App <parameters>
+`ojdbc7.jar` must be downloaded from oracle website and installed manualy to local maven repository. It can be downloaded eg. from oracle maven repository
+To install the file into your local repository, use following command `mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc7 -Dversion=12.1.0.1 -DgeneratePom=true -Dfile=ojdbc7.jar -Dpackaging=jar`
 
-Compilation:
+Execute `mvn package` in the project root. The file `fastldr-1.0.0-SNAPSHOT-jar-with-dependencies.jar` is generated in **fastldr/target/** directory.
 
-ojdbc14.jar must be downloaded from oracle website and installed manualy to local maven repository. It can be downloaded eg. from oracle maven repository
+### Run:
+`java -jar fastldr-1.0.0-SNAPSHOT-jar-with-dependencies.jar <parameters>`
 
-mvn install:install-file -Dfile=<path-to-file-ojdbc14.jar> -DgroupId=com.oracle -DartifactId=ojdbc7 -Dversion=12.1.0.2 -Dpackaging=jar
+Note:
 
-Connecting to other database than Oracle:
+The **USERID** paremeter is parsed as [EZCONNECT](http://www.orafaq.com/wiki/EZCONNECT) string - _username/password@[//]host[:port][/service_name]_ 
+
+The connection string is then generated as **jdbc:oracle:thin:@//host:port/service_name** (eg. using service name instead of SID)
+
+ Connecting to other database than Oracle:
+ -
+ 
 [TODO]
 
 Credits:

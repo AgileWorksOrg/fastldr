@@ -6,7 +6,7 @@ public class UserID {
 	private String user;
 	private String password;
 	private String hostname;
-	private String instance;
+	private String service;
 
 	public UserID(String uid) throws ParseException {
 		int atSign = uid.indexOf("@");
@@ -29,7 +29,7 @@ public class UserID {
 			throw new ParseException("Invalid format of USERID parameter (missing '/' divider of hostname/instance)");
 
 		hostname = hostPart.substring(0, slashSign).trim();
-		instance = hostPart.substring(slashSign + 1).trim();
+		service = hostPart.substring(slashSign + 1).trim();
 	}
 
 	public String getUser() {
@@ -56,12 +56,12 @@ public class UserID {
 		this.hostname = hostname;
 	}
 
-	public String getInstance() {
-		return instance;
+	public String getService() {
+		return service;
 	}
 
-	public void setInstance(String instance) {
-		this.instance = instance;
+	public void setService(String service) {
+		this.service = service;
 	}
 
 	@Override
@@ -74,8 +74,9 @@ public class UserID {
 		sb.append("@");
 		sb.append(hostname);
 		sb.append("/");
-		sb.append(instance);
+		sb.append(service);
 		
 		return sb.toString();
 	}
+
 }

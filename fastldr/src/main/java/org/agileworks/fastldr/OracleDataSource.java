@@ -4,6 +4,7 @@ import java.sql.Driver;
 
 import javax.sql.DataSource;
 
+import org.agileworks.fastldr.args.UserID;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import org.agileworks.fastldr.args.CmdArguments;
@@ -23,8 +24,9 @@ public class OracleDataSource {
 			SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
 			dataSource.setDriverClass(driver);
 			dataSource.setUrl(url);
-			dataSource.setUsername(cmdArguments.getUserID().getUser());
-			dataSource.setPassword(cmdArguments.getUserID().getPassword());
+			UserID userID = cmdArguments.getUserID();
+			dataSource.setUsername(userID.getUser());
+			dataSource.setPassword(userID.getPassword());
 			return dataSource;
 		} catch (ClassNotFoundException e) {
 			throw new FastLdrException(e);
@@ -34,8 +36,10 @@ public class OracleDataSource {
 	private String createUrl() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("jdbc:oracle:thin:@");
-		sb.append(cmdArguments.getUserID().getHostname()).append(":1521:")
-				.append(cmdArguments.getUserID().getInstance());
+		UserID userID = cmdArguments.getUserID();
+		sb.append("//");
+		sb.append(userID.getHostname()).append(":1521");
+		sb.append('/').append(userID.getService());
 		return sb.toString();
 	}
 }
