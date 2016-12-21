@@ -19,18 +19,76 @@
 		<module>fastldr-parser</module>
 	</modules>
 
-    <repositories>
-        <repository>
-            <id>freemind</id>
-            <url>http://repos.dev.freemind.co.jp/maven2</url>
-        </repository>
-    </repositories>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.agileworks.fastldr</groupId>
+				<artifactId>fastldr-parser</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.agileworks.fastldr</groupId>
+				<artifactId>fastldr-args-parser</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.agileworks.fastldr</groupId>
+				<artifactId>fastldr</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jumpmind.symmetric</groupId>
+				<artifactId>symmetric-csv</artifactId>
+				<version>3.5.19</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>4.3.3.RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>com.oracle</groupId>
+				<artifactId>ojdbc7</artifactId>
+				<version>12.1.0.1</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.1.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>1.7.21</version>
+			</dependency>
+			<dependency>
+				<groupId>net.java.dev.javacc</groupId>
+				<artifactId>javacc</artifactId>
+				<version>6.1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>1.4.193</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+			</dependency>
+			<dependency>
+				<groupId>org.spockframework</groupId>
+				<artifactId>spock-core</artifactId>
+				<version>1.0-groovy-2.4</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
