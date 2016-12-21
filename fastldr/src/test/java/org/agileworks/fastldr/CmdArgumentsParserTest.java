@@ -1,9 +1,5 @@
 package org.agileworks.fastldr;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.StringReader;
 
 import org.junit.Test;
@@ -11,6 +7,8 @@ import org.junit.Test;
 import org.agileworks.fastldr.args.CmdArguments;
 import org.agileworks.fastldr.args.parser.CmdArgumentsParser;
 import org.agileworks.fastldr.args.parser.ParseException;
+
+import static org.junit.Assert.*;
 
 public class CmdArgumentsParserTest {
 
@@ -37,7 +35,7 @@ public class CmdArgumentsParserTest {
 		assertEquals(1, cmdArguments.getSkip());
 
 		assertEquals("10.211.55.4", cmdArguments.getUserID().getHostname());
-		assertEquals("AGILEWORKS", cmdArguments.getUserID().getInstance());
+		assertEquals("AGILEWORKS", cmdArguments.getUserID().getService());
 		assertEquals("FooUser", cmdArguments.getUserID().getUser());
 		assertEquals("FooUserPass", cmdArguments.getUserID().getPassword());
 	}
@@ -124,7 +122,7 @@ public class CmdArgumentsParserTest {
 		assertEquals(1, cmdArguments.getSkip());
 
 		assertEquals("10.211.55.4", cmdArguments.getUserID().getHostname());
-		assertEquals("AGILEWORKS", cmdArguments.getUserID().getInstance());
+		assertEquals("AGILEWORKS", cmdArguments.getUserID().getService());
 		assertEquals("FooUser", cmdArguments.getUserID().getUser());
 		assertEquals("FooUserPass", cmdArguments.getUserID().getPassword());
 	}
@@ -152,7 +150,7 @@ public class CmdArgumentsParserTest {
 		assertEquals(1, cmdArguments.getSkip());
 
 		assertEquals("10.211.55.4", cmdArguments.getUserID().getHostname());
-		assertEquals("AGILEWORKS", cmdArguments.getUserID().getInstance());
+		assertEquals("AGILEWORKS", cmdArguments.getUserID().getService());
 		assertEquals("FooUser", cmdArguments.getUserID().getUser());
 		assertEquals("FooUserPass", cmdArguments.getUserID().getPassword());
 

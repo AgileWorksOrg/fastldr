@@ -8,11 +8,7 @@
 		</layout>
 	</appender>
 
-	<logger name="org.springframework.jdbc" level="WARN" />
-	<logger name="org.springframework.jdbc.core.JdbcTemplate" level="WARN" />
-	<logger name="org.agileworks" level="INFO" />
-
-	<root level="debug">
+	<root level="ERROR">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
