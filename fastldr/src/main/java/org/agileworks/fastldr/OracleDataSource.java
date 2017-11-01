@@ -38,7 +38,8 @@ public class OracleDataSource {
 		sb.append("jdbc:oracle:thin:@");
 		UserID userID = cmdArguments.getUserID();
 		sb.append("//");
-		sb.append(userID.getHostname()).append(":1521");
+		sb.append(userID.getHostname()).append(":");
+		sb.append(userID.getPort());
 		sb.append('/').append(userID.getService());
 		return sb.toString();
 	}
